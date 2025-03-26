@@ -1,0 +1,26 @@
+<annotation>
+	<folder>dayClip3</folder>
+	<filename>dayClip3--00618.jpg</filename>
+	<path>C:\Users\Davi.Dias\Desktop\TCC\dataset\dayClip3\dayClip3--00618.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1280</width>
+		<height>960</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>semaforo verde</name>
+		<pose>Unspecified</pose>
+		<truncated>1</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1225</xmin>
+			<ymin>122</ymin>
+			<xmax>1280</xmax>
+			<ymax>265</ymax>
+		</bndbox>
+	</object>
+</annotation>
