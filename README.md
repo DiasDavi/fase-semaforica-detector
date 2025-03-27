@@ -11,18 +11,18 @@ Este projeto tem como objetivo processar, gerar e avaliar anotações de detecç
 ├── config/                       
 │   ├── config.py                 # Arquivo de configurações
 ├── dataset/                       
-│   ├── dayClip1                  # frames e anotações xml
-│   ├── dayClip2                  # frames e anotações xml
-│   ├── dayClip3                  # frames e anotações xml
-│   ├── annotations.json          # anotações em formato json
+│   ├── dayClip1                  # Frames e anotações XML
+│   ├── dayClip2                  # Frames e anotações XML
+│   ├── dayClip3                  # Frames e anotações XML
+│   ├── annotations.json          # Anotações em formato JSON
 ├── output/                       
-│   ├── detector.h5               # detector treinado
-│   ├── plot.png                  # graficos do treinamento
-│   ├── test_files.txt            # txt com os arquivos utilizados no treino
+│   ├── detector.h5               # Modelo treinado
+│   ├── plot.png                  # Gráficos do treinamento
+│   ├── test_files.txt            # Lista dos arquivos utilizados no treino
 ├── requirements/                       
-│   ├── requirements-gpu.txt      # dependencias para quem usa gpu
-│   ├── requirements.txt          # dependencias para quem não usa gpu
-├── extract_annotations.py        # extrator das anotações xml para json
+│   ├── requirements-gpu.txt      # Dependências para GPU
+│   ├── requirements.txt          # Dependências para CPU
+├── extract_annotations.py        # Conversor de anotações XML para JSON
 ├── image_data_generator.py       # Gerador de dados para treinamento
 ├── metrics.py                    # Cálculo de métricas de desempenho
 ├── train.py                      # Script principal de treinamento
