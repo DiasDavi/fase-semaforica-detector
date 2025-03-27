@@ -1,6 +1,7 @@
 from config import config
 from tensorflow.keras.preprocessing.image import img_to_array, load_img
 from tensorflow.keras.models import load_model
+from metrics import iou
 import numpy as np
 import mimetypes
 import argparse
@@ -27,7 +28,7 @@ else:
     imagePaths.append(imagePath)
 
 print("[INFO] Carregando o modelo detector de objetos...")
-model = load_model(config.MODEL_PATH)
+model = load_model(config.MODEL_PATH, custom_objects={"iou": iou})
 
 for imagePath in imagePaths:
     # Carregar e preparar a imagem
