@@ -58,9 +58,15 @@ O script `extract_annotations.py` converte anotações no formato XML (Pascal VO
 ### Treinamento do Modelo
 O script `train.py` é responsável por treinar a rede neural com os dados processados.
 
-## Resultados
+#### Resultados
 Os arquivos gerados após a execução dos scripts incluem:
 
 * `output/detector.h5`: Modelo treinado.
 * `output/plot.png`: Gráficos do treinamento.
 * `output/test_files.txt`: Lista dos arquivos utilizados no treinamento.
+
+### Previsão do imagens
+O script `predict.py` é responsavel por realizar a previsão dos bboxes da imagem
+```bash
+python predict.py --image CAMINHO_DA_IMAGEM
+```
