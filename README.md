@@ -19,6 +19,9 @@ Este projeto tem como objetivo processar, gerar e avaliar anotações de detecç
 │   ├── detector.h5               # detector treinado
 │   ├── plot.png                  # graficos do treinamento
 │   ├── test_files.txt            # txt com os arquivos utilizados no treino
+├── requirements/                       
+│   ├── requirements-gpu.txt      # dependencias para quem usa gpu
+│   ├── requirements.txt          # dependencias para quem não usa gpu
 ├── extract_annotations.py        # extrator das anotações xml para json
 ├── image_data_generator.py       # Gerador de dados para treinamento
 ├── metrics.py                    # Cálculo de métricas de desempenho
