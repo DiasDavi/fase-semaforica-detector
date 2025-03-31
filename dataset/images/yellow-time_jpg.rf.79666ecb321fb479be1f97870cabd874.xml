@@ -1,0 +1,29 @@
+<annotation>
+	<folder></folder>
+	<filename>yellow-time_jpg.rf.79666ecb321fb479be1f97870cabd874.jpg</filename>
+	<path>yellow-time_jpg.rf.79666ecb321fb479be1f97870cabd874.jpg</path>
+	<source>
+		<database>roboflow.com</database>
+	</source>
+	<size>
+		<width>640</width>
+		<height>640</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>yellow</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<occluded>0</occluded>
+		<bndbox>
+			<xmin>154</xmin>
+			<xmax>253</xmax>
+			<ymin>32</ymin>
+			<ymax>169</ymax>
+		</bndbox>
+	</object>
+	<metadata>
+	</metadata>
+</annotation>

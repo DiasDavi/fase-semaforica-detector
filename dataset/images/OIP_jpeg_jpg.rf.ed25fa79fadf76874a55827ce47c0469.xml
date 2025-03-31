@@ -1,0 +1,29 @@
+<annotation>
+	<folder></folder>
+	<filename>OIP_jpeg_jpg.rf.ed25fa79fadf76874a55827ce47c0469.jpg</filename>
+	<path>OIP_jpeg_jpg.rf.ed25fa79fadf76874a55827ce47c0469.jpg</path>
+	<source>
+		<database>roboflow.com</database>
+	</source>
+	<size>
+		<width>640</width>
+		<height>640</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>yellow</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<occluded>0</occluded>
+		<bndbox>
+			<xmin>282</xmin>
+			<xmax>356</xmax>
+			<ymin>175</ymin>
+			<ymax>571</ymax>
+		</bndbox>
+	</object>
+	<metadata>
+	</metadata>
+</annotation>

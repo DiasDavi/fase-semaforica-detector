@@ -1,0 +1,29 @@
+<annotation>
+	<folder></folder>
+	<filename>maxresdefault_jpg.rf.8a96346bcc72ceec24571f3e021a76e3.jpg</filename>
+	<path>maxresdefault_jpg.rf.8a96346bcc72ceec24571f3e021a76e3.jpg</path>
+	<source>
+		<database>roboflow.com</database>
+	</source>
+	<size>
+		<width>640</width>
+		<height>640</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>yellow</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<occluded>0</occluded>
+		<bndbox>
+			<xmin>154</xmin>
+			<xmax>243</xmax>
+			<ymin>365</ymin>
+			<ymax>402</ymax>
+		</bndbox>
+	</object>
+	<metadata>
+	</metadata>
+</annotation>

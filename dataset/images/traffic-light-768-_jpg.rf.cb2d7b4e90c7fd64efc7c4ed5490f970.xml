@@ -1,0 +1,29 @@
+<annotation>
+	<folder></folder>
+	<filename>traffic-light-768-_jpg.rf.cb2d7b4e90c7fd64efc7c4ed5490f970.jpg</filename>
+	<path>traffic-light-768-_jpg.rf.cb2d7b4e90c7fd64efc7c4ed5490f970.jpg</path>
+	<source>
+		<database>roboflow.com</database>
+	</source>
+	<size>
+		<width>640</width>
+		<height>640</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>red</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<occluded>0</occluded>
+		<bndbox>
+			<xmin>221</xmin>
+			<xmax>436</xmax>
+			<ymin>313</ymin>
+			<ymax>449</ymax>
+		</bndbox>
+	</object>
+	<metadata>
+	</metadata>
+</annotation>
