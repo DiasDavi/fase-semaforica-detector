@@ -7,7 +7,7 @@ import json
 class AnnotationDataset:
     def __init__(self):
         self.base_path = config.BASE_PATH
-        self.folders = config.IMAGES_PATH
+        self.images_path = config.IMAGES_PATH
         self.annotations = []
 
         # Tenta carregar as anotações do arquivo JSON, se existir
@@ -19,7 +19,7 @@ class AnnotationDataset:
         root = tree.getroot()
 
         annotation = {
-            'folder': root.find('folder').text,
+            'folder': "images",
             'filename': root.find('filename').text,
             'size': {
                 'width': int(root.find('size/width').text),
@@ -45,12 +45,11 @@ class AnnotationDataset:
 
     def process_folders(self):
         dataset = []
-        for folder in self.folders:
-            for file in os.listdir(folder):
-                if file.endswith('.xml'):
-                    xml_path = os.path.join(folder, file)
-                    annotation = self.parse_xml(xml_path)
-                    dataset.append(annotation)
+        for file in os.listdir(self.images_path):
+            if file.endswith('.xml'):
+                xml_path = os.path.join(self.images_path, file)
+                annotation = self.parse_xml(xml_path)
+                dataset.append(annotation)
 
         self.annotations = dataset
 
@@ -72,6 +71,18 @@ class AnnotationDataset:
         annotation = self.annotations[index]
         img_path = os.path.join(self.base_path, annotation['folder'], annotation['filename'])
         img = cv2.imread(img_path)
+
+        for obj in annotation['object']:
+            xmin, ymin, xmax, ymax = obj['bndbox'].values()
+            label = obj['name']
+
+            # Desenha retângulo na imagem
+            cv2.rectangle(img, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
+
+            # Adiciona label acima do bounding box
+            cv2.putText(img, label, (xmin, ymin - 5),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
         if show:
             cv2.imshow('Image', img)
             cv2.waitKey(0)
@@ -95,3 +106,4 @@ class AnnotationDataset:
 ann = AnnotationDataset()
 ann.process_folders()
 
+# ann.img(3, True)
