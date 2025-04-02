@@ -1,7 +1,10 @@
+# --- Importações ---
+import tensorflow as tf
+from numba import cuda
 from config import config
-from tensorflow.keras.applications import VGG16
-from tensorflow.keras.layers import Dense, Flatten, Input, Reshape
-from tensorflow.keras import Model
+from tensorflow.keras.applications import MobileNetV2
+from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Input, Reshape
+from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
@@ -11,7 +14,7 @@ from extract_annotations import AnnotationDataset
 from image_data_generator import MultiBoxDataGenerator
 from metrics import iou
 
-# --- 1. Carregar as anotações ---
+# --- Carregar as anotações ---
 print("[INFO] Carregando o conjunto de anotações...")
 ann = AnnotationDataset()
 print("[SUCESSO] Conjunto de anotações carregado.\n")
@@ -36,7 +39,7 @@ for row in ann.rows():
 
 print("[SUCESSO] Processamento das imagens concluído.\n")
 
-# --- 2. Divisão de treino e teste ---
+# --- Divisão de treino e teste ---
 print("[INFO] Realizando a divisão dos dados em treino e teste...")
 split = train_test_split(data_paths, targets, test_size=0.3, random_state=42)
 
@@ -52,72 +55,63 @@ with open(config.TEST_FILENAMES, "w") as f:
     f.write("\n".join(testFilenames))
 print("[SUCESSO] Nomes dos arquivos de teste salvos com sucesso.\n")
 
-# --- 3. Definir parâmetros e criar os Generators ---
+# --- Criar os Generators ---
 train_generator = MultiBoxDataGenerator(trainFilenames, trainTargets, batch_size=config.BATCH_SIZE, max_boxes=config.NUM_MAX_BBOX)
 test_generator = MultiBoxDataGenerator(testFilenames, testTargets, batch_size=config.BATCH_SIZE, max_boxes=config.NUM_MAX_BBOX)
 
-# --- 4. Criar o Modelo ---
+# --- Criar o Modelo ---
 input_tensor = Input(shape=(224, 224, 3))
-vgg = VGG16(weights="imagenet", include_top=False, input_tensor=input_tensor)
-vgg.trainable = False  # Congela os pesos do VGG16
+base_model = MobileNetV2(weights="imagenet", include_top=False, input_tensor=input_tensor)
+base_model.trainable = False  
 
-x = Flatten()(vgg.output)
-x = Dense(128, activation="relu")(x)
-x = Dense(64, activation="relu")(x)
-x = Dense(32, activation="relu")(x)
-# Saída: max_boxes * 4 valores, normalizados entre 0 e 1 (graças à ativação sigmoide)
+x = GlobalAveragePooling2D()(base_model.output)  # Reduz parâmetros
+x = Dense(64, activation="relu")(x)  # Apenas uma camada densa
 x = Dense(config.NUM_MAX_BBOX * 4, activation="sigmoid")(x)
 output = Reshape((config.NUM_MAX_BBOX, 4))(x)
 
 model = Model(inputs=input_tensor, outputs=output)
 model.summary()
 
-# --- 5. Compilar e Treinar o Modelo ---
+# --- Compilar e Treinar o Modelo ---
 opt = Adam(learning_rate=1e-4)
-model.compile(optimizer=opt, loss="mse", metrics=[iou, 'accuracy'], run_eagerly=True)
+model.compile(optimizer=opt, loss="mse", metrics=[tf.keras.metrics.MeanIoU(num_classes=2)])
 
 print("[INFO] Treinando o modelo...")
 H = model.fit(train_generator, validation_data=test_generator, epochs=config.NUM_EPOCHS, verbose=1)
 print("[SUCESSO] Treinamento concluído.\n")
 
-# --- 6. Salvar o Modelo ---
+# --- Salvar o Modelo ---
 print("[INFO] Salvando o modelo...")
 model.save(config.MODEL_PATH, save_format="h5")
 print("[SUCESSO] Modelo salvo com sucesso.\n")
 
-# --- 7. Gerar Gráficos do Treinamento ---
+# --- Gerar Gráficos do Treinamento ---
 print("[INFO] Gerando gráficos do treinamento...")
 plt.style.use("ggplot")
-plt.figure(figsize=(12, 5))
+plt.figure(figsize=(10, 4))  # Ajusta tamanho
 
 # Gráfico de Loss
-plt.subplot(1, 3, 1)
-plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["loss"], label="train_loss")
-plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["val_loss"], label="val_loss")
-plt.title("Training Loss")
-plt.xlabel("Epoch #")
-plt.ylabel("Loss")
+plt.subplot(1, 2, 1)
+plt.plot(np.arange(0, config.NUM_EPOCHS), H.history.get("loss", []), label="Perda no treino")
+plt.plot(np.arange(0, config.NUM_EPOCHS), H.history.get("val_loss", []), label="Perda na validação")
+plt.title("Perda no treinamento")
+plt.xlabel("Epoca #")
+plt.ylabel("Perda")
 plt.legend(loc="upper right")
+plt.grid(True)
 
 # Gráfico de IoU
-plt.subplot(1, 3, 2)
-plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["iou"], label="train_iou")
-plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["val_iou"], label="val_iou")
-plt.title("Training IoU")
-plt.xlabel("Epoch #")
+plt.subplot(1, 2, 2)
+plt.plot(np.arange(0, config.NUM_EPOCHS), H.history.get("mean_io_u", []), label="IoU medio no treino")
+plt.plot(np.arange(0, config.NUM_EPOCHS), H.history.get("val_mean_io_u", []), label="IoU medio na validação")
+plt.title("Intersecção sobre União (IoU)")
+plt.xlabel("Epoca #")
 plt.ylabel("IoU")
 plt.legend(loc="lower right")
+plt.grid(True)
 
-# Gráfico de Acurácia
-plt.subplot(1, 3, 3)
-plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["accuracy"], label="train_acc")
-plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["val_accuracy"], label="val_acc")
-plt.title("Training Accuracy")
-plt.xlabel("Epoch #")
-plt.ylabel("Accuracy")
-plt.legend(loc="lower right")
-
-# Salvar o gráfico
+# Ajusta layout e salva
 plt.tight_layout()
 plt.savefig(config.PLOT_PATH)
+plt.show()  # Exibe na tela
 print("[SUCESSO] Gráficos salvos com sucesso.\n")
